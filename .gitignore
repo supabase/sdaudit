@@ -1,1 +1,8 @@
 result*
+.claude
+docs/plans
+sdaudit
+.pre-commit-config.yaml
+.vscode
+.idea
+.DS_Store
