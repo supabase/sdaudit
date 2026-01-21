@@ -8,17 +8,17 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/samrose/sdaudit/internal/analyzer"
-	"github.com/samrose/sdaudit/internal/reporter"
-	"github.com/samrose/sdaudit/internal/rules"
-	"github.com/samrose/sdaudit/internal/tui"
-	"github.com/samrose/sdaudit/pkg/types"
+	"github.com/supabase/sdaudit/internal/analyzer"
+	"github.com/supabase/sdaudit/internal/reporter"
+	"github.com/supabase/sdaudit/internal/rules"
+	"github.com/supabase/sdaudit/internal/tui"
+	"github.com/supabase/sdaudit/pkg/types"
 
 	// Import rule packages to trigger init() registration
-	_ "github.com/samrose/sdaudit/internal/rules/bestpractice"
-	_ "github.com/samrose/sdaudit/internal/rules/performance"
-	_ "github.com/samrose/sdaudit/internal/rules/reliability"
-	_ "github.com/samrose/sdaudit/internal/rules/security"
+	_ "github.com/supabase/sdaudit/internal/rules/bestpractice"
+	_ "github.com/supabase/sdaudit/internal/rules/performance"
+	_ "github.com/supabase/sdaudit/internal/rules/reliability"
+	_ "github.com/supabase/sdaudit/internal/rules/security"
 )
 
 var version = "dev"

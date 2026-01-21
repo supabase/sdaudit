@@ -1,7 +1,7 @@
 package rules
 
 import (
-	"github.com/samrose/sdaudit/pkg/types"
+	"github.com/supabase/sdaudit/pkg/types"
 )
 
 // Context provides the execution context for rules

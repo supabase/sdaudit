@@ -4,8 +4,8 @@ import (
 	"os/user"
 	"strings"
 
-	"github.com/samrose/sdaudit/internal/rules"
-	"github.com/samrose/sdaudit/pkg/types"
+	"github.com/supabase/sdaudit/internal/rules"
+	"github.com/supabase/sdaudit/pkg/types"
 )
 
 func init() {

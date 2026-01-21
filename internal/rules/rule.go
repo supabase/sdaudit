@@ -1,7 +1,7 @@
 package rules
 
 import (
-	"github.com/samrose/sdaudit/pkg/types"
+	"github.com/supabase/sdaudit/pkg/types"
 )
 
 // Rule defines the interface that all rules must implement

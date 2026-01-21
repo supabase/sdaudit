@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/samrose/sdaudit/internal/analyzer"
-	"github.com/samrose/sdaudit/internal/rules"
-	"github.com/samrose/sdaudit/pkg/types"
+	"github.com/supabase/sdaudit/internal/analyzer"
+	"github.com/supabase/sdaudit/internal/rules"
+	"github.com/supabase/sdaudit/pkg/types"
 )
 
 // SARIFReporter outputs scan results in SARIF 2.1.0 format
@@ -200,7 +200,7 @@ func (r *SARIFReporter) Report(result *analyzer.ScanResult) error {
 				Driver: SARIFDriver{
 					Name:           "sdaudit",
 					Version:        "1.0.0",
-					InformationURI: "https://github.com/samrose/sdaudit",
+					InformationURI: "https://github.com/supabase/sdaudit",
 					Rules:          sarifRules,
 				},
 			},

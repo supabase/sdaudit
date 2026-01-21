@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/samrose/sdaudit/pkg/types"
+	"github.com/supabase/sdaudit/pkg/types"
 )
 
 // ParseUnitFile parses a systemd unit file from the given path

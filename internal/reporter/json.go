@@ -5,7 +5,7 @@ import (
 	"io"
 	"time"
 
-	"github.com/samrose/sdaudit/internal/analyzer"
+	"github.com/supabase/sdaudit/internal/analyzer"
 )
 
 // JSONReporter outputs scan results in JSON format

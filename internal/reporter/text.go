@@ -5,8 +5,8 @@ import (
 	"io"
 	"strings"
 
-	"github.com/samrose/sdaudit/internal/analyzer"
-	"github.com/samrose/sdaudit/pkg/types"
+	"github.com/supabase/sdaudit/internal/analyzer"
+	"github.com/supabase/sdaudit/pkg/types"
 )
 
 // TextReporter outputs scan results in human-readable format

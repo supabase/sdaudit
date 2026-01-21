@@ -63,7 +63,7 @@
 
           meta = with pkgs.lib; {
             description = "Comprehensive systemd auditing tool for Ubuntu 24.04";
-            homepage = "https://github.com/samrose/sdaudit";
+            homepage = "https://github.com/supabase/sdaudit";
             license = licenses.mit;
             maintainers = [ ];
             mainProgram = "sdaudit";

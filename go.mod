@@ -1,4 +1,4 @@
-module github.com/samrose/sdaudit
+module github.com/supabase/sdaudit
 
 go 1.24.0
 

@@ -4,7 +4,7 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/samrose/sdaudit/pkg/types"
+	"github.com/supabase/sdaudit/pkg/types"
 )
 
 var (

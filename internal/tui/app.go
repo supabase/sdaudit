@@ -8,8 +8,8 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/samrose/sdaudit/internal/analyzer"
-	"github.com/samrose/sdaudit/pkg/types"
+	"github.com/supabase/sdaudit/internal/analyzer"
+	"github.com/supabase/sdaudit/pkg/types"
 )
 
 // View represents the current view in the TUI

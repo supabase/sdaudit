@@ -16,15 +16,15 @@ A comprehensive systemd auditing tool for analyzing unit files, detecting miscon
 ### Using Nix (recommended)
 
 ```bash
-nix build github:samrose/sdaudit
+nix build github:sdaudit/sdaudit
 # or run directly
-nix run github:samrose/sdaudit -- scan
+nix run github:sdaudit/sdaudit -- scan
 ```
 
 ### From Source
 
 ```bash
-git clone https://github.com/samrose/sdaudit
+git clone https://github.com/supabase/sdaudit
 cd sdaudit
 go build -o sdaudit ./cmd/sdaudit
 ```
