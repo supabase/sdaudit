@@ -1,0 +1,66 @@
+name: "Install Nix (ephemeral)"
+description: "Install Nix with cache configuration and optional push-to-cache support"
+
+inputs:
+  aws-role-arn:
+    description: "AWS IAM role ARN for accessing the Nix binary cache"
+    required: false
+  push-to-cache:
+    description: "Whether to push built artifacts to the cache"
+    required: false
+    default: "false"
+  aws-region:
+    description: "AWS region for the cache bucket"
+    required: false
+    default: "us-east-1"
+
+runs:
+  using: composite
+  steps:
+    - name: Configure AWS credentials
+      if: ${{ inputs.push-to-cache == 'true' }}
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ inputs.aws-role-arn }}
+        aws-region: ${{ inputs.aws-region }}
+        role-duration-seconds: 7200
+        output-credentials: true
+
+    - name: Setup AWS credentials and Nix signing key
+      if: ${{ inputs.push-to-cache == 'true' }}
+      shell: bash
+      run: |
+        # Configure AWS credentials for root user (needed for nix daemon)
+        sudo -H aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+        sudo -H aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+        sudo -H aws configure set aws_session_token $AWS_SESSION_TOKEN
+
+        # Write the signing key securely (avoid shell expansion/logging)
+        sudo mkdir -p /etc/nix
+        sudo -E python3 -c "import os; file = open('/etc/nix/nix-secret-key', 'w'); file.write(os.environ['NIX_SIGN_SECRET_KEY']); file.close()"
+        sudo chmod 600 /etc/nix/nix-secret-key
+
+    - name: Create post-build-hook for cache uploads
+      if: ${{ inputs.push-to-cache == 'true' }}
+      shell: bash
+      run: |
+        sudo tee /etc/nix/upload-to-cache.sh > /dev/null << 'HOOK'
+        #!/usr/bin/env bash
+        set -euo pipefail
+        set -f
+
+        export IFS=' '
+        /nix/var/nix/profiles/default/bin/nix copy --to 's3://nix-postgres-artifacts?secret-key=/etc/nix/nix-secret-key' $OUT_PATHS
+        HOOK
+        sudo chmod +x /etc/nix/upload-to-cache.sh
+
+    - name: Install Nix
+      uses: cachix/install-nix-action@v31
+      with:
+        install_url: https://releases.nixos.org/nix/nix-2.32.2/install
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+          substituters = https://cache.nixos.org https://nix-postgres-artifacts.s3.amazonaws.com
+          trusted-public-keys = nix-postgres-artifacts:dGZlQOvKcNEjvT7QEAJbcV6b6uk7VF/hWMjhYleiaLI= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+          ${{ inputs.push-to-cache == 'true' && 'post-build-hook = /etc/nix/upload-to-cache.sh' || '' }}
+          max-jobs = 4

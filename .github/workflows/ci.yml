@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  nix-build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            system: x86_64-linux
+          - os: macos-14
+            system: aarch64-darwin
+          # aarch64-linux: not available for private repos yet
+          # - os: ubuntu-24.04-arm
+          #   system: aarch64-linux
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: ./.github/actions/nix-install-ephemeral
+        with:
+          aws-role-arn: ${{ vars.DEV_AWS_NIX_ARTIFACTS_ROLE }}
+          push-to-cache: ${{ secrets.NIX_SIGN_SECRET_KEY != '' }}
+          aws-region: us-east-1
+        env:
+          NIX_SIGN_SECRET_KEY: ${{ secrets.NIX_SIGN_SECRET_KEY }}
+
+      - name: Run nix flake check via nix-fast-build
+        run: |
+          nix run "github:Mic92/nix-fast-build?rev=b1dae483ab7d4139a6297e02b6de9e5d30e43d48" -- --skip-cached --no-nom --flake ".#checks"
