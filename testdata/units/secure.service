@@ -1,0 +1,19 @@
+[Unit]
+Description=Secure Test Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/myapp
+Restart=on-failure
+RestartSec=5
+
+# Security hardening
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateDevices=yes
+
+[Install]
+WantedBy=multi-user.target

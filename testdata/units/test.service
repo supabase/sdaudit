@@ -1,0 +1,11 @@
+[Unit]
+Description=Test Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/myapp
+# Intentionally missing security hardening
+
+[Install]
+WantedBy=multi-user.target
