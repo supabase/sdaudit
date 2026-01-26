@@ -1,0 +1,5 @@
+[Unit]
+Description=Database
+
+[Service]
+ExecStart=/usr/bin/db

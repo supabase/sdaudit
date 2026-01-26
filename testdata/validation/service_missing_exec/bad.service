@@ -1,0 +1,9 @@
+[Unit]
+Description=Service missing ExecStart
+
+[Service]
+Type=simple
+User=root
+
+[Install]
+WantedBy=multi-user.target

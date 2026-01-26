@@ -1,0 +1,7 @@
+[Unit]
+Description=Service 2
+Requires=s1.service
+After=s1.service
+
+[Service]
+ExecStart=/bin/true

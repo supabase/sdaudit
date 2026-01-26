@@ -1,0 +1,6 @@
+[Unit]
+Description=Application
+Requires=cache.service
+
+[Service]
+ExecStart=/usr/bin/app

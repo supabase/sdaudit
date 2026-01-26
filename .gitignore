@@ -6,3 +6,4 @@ sdaudit
 .vscode
 .idea
 .DS_Store
+vendor/

@@ -1,0 +1,10 @@
+[Unit]
+Description=A valid service
+
+[Service]
+Type=simple
+ExecStart=/bin/true
+User=root
+
+[Install]
+WantedBy=multi-user.target

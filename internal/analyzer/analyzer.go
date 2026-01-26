@@ -124,6 +124,41 @@ func (a *Analyzer) Scan(opts Options) (*ScanResult, error) {
 	}, nil
 }
 
+// LoadUnits loads all units from the configured paths and returns them as a map.
+func (a *Analyzer) LoadUnits() (map[string]*types.UnitFile, error) {
+	return LoadUnitsFromPaths(a.unitPaths)
+}
+
+// LoadFiles loads units from specific files or directories.
+func (a *Analyzer) LoadFiles(paths []string) (map[string]*types.UnitFile, error) {
+	allUnits := make(map[string]*types.UnitFile)
+
+	for _, path := range paths {
+		info, err := os.Stat(path)
+		if err != nil {
+			return nil, fmt.Errorf("cannot access %s: %w", path, err)
+		}
+
+		if info.IsDir() {
+			dirUnits, err := LoadUnitsFromDirectory(path)
+			if err != nil {
+				return nil, fmt.Errorf("failed to load units from %s: %w", path, err)
+			}
+			for name, unit := range dirUnits {
+				allUnits[name] = unit
+			}
+		} else {
+			unit, err := ParseUnitFile(path)
+			if err != nil {
+				return nil, fmt.Errorf("failed to parse %s: %w", path, err)
+			}
+			allUnits[unit.Name] = unit
+		}
+	}
+
+	return allUnits, nil
+}
+
 // CheckFiles checks specific unit files
 func (a *Analyzer) CheckFiles(paths []string, opts Options) (*ScanResult, error) {
 	allUnits := make(map[string]*types.UnitFile)

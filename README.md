@@ -10,6 +10,10 @@ A comprehensive systemd auditing tool for analyzing unit files, detecting miscon
 - **Boot Analysis** - Analyze boot time and identify slow services
 - **Dependency Analysis** - Detect circular dependencies and missing units
 - **Security Scoring** - Aggregate security analysis using systemd-analyze
+- **Graph Analysis** - Typed multigraph with cycle detection (Tarjan's SCC), reachability analysis, and DOT export
+- **Timing Analysis** - Critical path computation, timeout cascade detection
+- **Failure Propagation** - Restart storm detection, deadlock analysis, failure simulation
+- **Type-Specific Validation** - Deep validation for service, socket, timer, mount, and path units
 
 ## Installation
 
@@ -91,6 +95,76 @@ sdaudit security
 
 # Score specific service
 sdaudit security nginx.service
+```
+
+### Advanced Analysis
+
+#### Dependency Graph Analysis
+
+```bash
+# Find circular dependencies using Tarjan's SCC algorithm
+sdaudit graph cycles
+
+# Show reachability from a target (what needs to start for this)
+sdaudit graph reachability multi-user.target
+
+# Find dangling references to missing units
+sdaudit graph dangling
+
+# Detect ordering issues (After without Requires, etc.)
+sdaudit graph ordering
+
+# Export dependency graph as DOT format for visualization
+sdaudit graph export --format dot > deps.dot
+dot -Tsvg deps.dot > deps.svg
+
+# Export with cycle highlighting
+sdaudit graph export --format dot --highlight-cycles > deps.dot
+```
+
+#### Timing Analysis
+
+```bash
+# Compute critical paths (longest startup chains)
+sdaudit timing critical-paths
+
+# Find units with timeouts above threshold
+sdaudit timing thresholds --min-timeout 60s
+
+# Detect timeout cascade risks
+sdaudit timing cascades
+```
+
+#### Failure Propagation Analysis
+
+```bash
+# Detect restart storm risks (mutual BindsTo + aggressive Restart)
+sdaudit propagation storms
+
+# Find deadlock conditions (circular dependencies with BindsTo)
+sdaudit propagation deadlocks
+
+# Detect silent failure risks (Wants= on critical services)
+sdaudit propagation silent-failures
+
+# Simulate unit failure and show affected units
+sdaudit propagation simulate nginx.service
+```
+
+#### Type-Specific Validation
+
+```bash
+# Validate all units with type-specific checks
+sdaudit validate
+
+# Validate specific files
+sdaudit validate ./my-service.service ./my-app.socket
+
+# Include filesystem checks (verify paths exist)
+sdaudit validate --check-paths
+
+# Include user/group existence checks
+sdaudit validate --check-users
 ```
 
 ### List Available Rules
@@ -278,6 +352,27 @@ sdaudit/
 ├── cmd/sdaudit/          # CLI entrypoint
 ├── internal/
 │   ├── analyzer/         # Core analysis engine
+│   ├── graph/            # Dependency graph analysis
+│   │   ├── graph.go      # Typed multigraph using gonum/graph
+│   │   ├── builder.go    # Graph construction from units
+│   │   ├── tarjan.go     # Cycle detection (Tarjan's SCC)
+│   │   ├── reachability.go # Transitive dependency analysis
+│   │   ├── analysis.go   # Dangling refs, ordering issues
+│   │   └── dot.go        # Graphviz DOT export
+│   ├── timing/           # Timeout and timing analysis
+│   │   ├── timeout.go    # Systemd time span parsing
+│   │   ├── critical_path.go # Longest startup chains
+│   │   └── cascade.go    # Timeout cascade detection
+│   ├── propagation/      # Failure propagation analysis
+│   │   ├── failure.go    # Propagation semantics, simulation
+│   │   ├── restart_storm.go # Restart loop detection
+│   │   └── deadlock.go   # Deadlock condition detection
+│   ├── validation/       # Type-specific unit validation
+│   │   ├── service.go    # Service unit validation
+│   │   ├── socket.go     # Socket unit validation
+│   │   ├── timer.go      # Timer unit validation
+│   │   ├── mount.go      # Mount unit validation
+│   │   └── path.go       # Path unit validation
 │   ├── reporter/         # Output formatters (text, json, sarif)
 │   ├── rules/            # Rule definitions
 │   │   ├── security/     # Security rules (SEC*)
@@ -307,5 +402,6 @@ Contributions are welcome! Please feel free to submit issues and pull requests.
 ## Acknowledgments
 
 - Built with [Cobra](https://github.com/spf13/cobra) for CLI
+- Graph algorithms powered by [gonum/graph](https://github.com/gonum/gonum)
 - TUI powered by [Bubbletea](https://github.com/charmbracelet/bubbletea) and [Lipgloss](https://github.com/charmbracelet/lipgloss)
 - Inspired by systemd-analyze and various systemd hardening guides

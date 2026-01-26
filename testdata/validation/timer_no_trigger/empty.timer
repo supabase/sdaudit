@@ -1,0 +1,8 @@
+[Unit]
+Description=Timer without any triggers
+
+[Timer]
+# No OnCalendar, OnBootSec, etc.
+
+[Install]
+WantedBy=timers.target

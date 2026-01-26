@@ -1,0 +1,6 @@
+[Unit]
+Description=Web server
+After=database.service
+
+[Service]
+ExecStart=/usr/bin/web

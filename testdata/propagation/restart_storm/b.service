@@ -1,0 +1,8 @@
+[Unit]
+Description=Service B
+BindsTo=a.service
+After=a.service
+
+[Service]
+ExecStart=/bin/true
+Restart=on-failure

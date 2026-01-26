@@ -1,0 +1,8 @@
+[Unit]
+Description=Socket without matching service
+
+[Socket]
+ListenStream=8080
+
+[Install]
+WantedBy=sockets.target

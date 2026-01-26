@@ -1,0 +1,7 @@
+[Unit]
+Description=Application service
+Requires=missing-db.service
+After=missing-db.service
+
+[Service]
+ExecStart=/usr/bin/app

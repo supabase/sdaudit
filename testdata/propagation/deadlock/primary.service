@@ -1,0 +1,7 @@
+[Unit]
+Description=Primary service
+BindsTo=secondary.service
+After=secondary.service
+
+[Service]
+ExecStart=/bin/true
