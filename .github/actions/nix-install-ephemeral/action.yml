@@ -19,7 +19,7 @@ runs:
   steps:
     - name: Configure AWS credentials
       if: ${{ inputs.push-to-cache == 'true' }}
-      uses: aws-actions/configure-aws-credentials@v4
+      uses: aws-actions/configure-aws-credentials@d979d5b3a71173a29b74b5b88418bfda9437d885 # v6.1.1
       with:
         role-to-assume: ${{ inputs.aws-role-arn }}
         aws-region: ${{ inputs.aws-region }}
@@ -55,7 +55,7 @@ runs:
         sudo chmod +x /etc/nix/upload-to-cache.sh
 
     - name: Install Nix
-      uses: cachix/install-nix-action@v31
+      uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
       with:
         install_url: https://releases.nixos.org/nix/nix-2.32.2/install
         extra_nix_config: |
